@@ -14,6 +14,7 @@ import { Icon } from 'astro-icon/components';
 type Props = CollectionEntry<'blog'>['data'] & { headings?: any[] };
 
 const { title, description, pubDate, updatedDate, heroImage, categories, headings } = Astro.props;
+const currentSlug = Astro.props.currentSlug || Astro.url.pathname.replace(/^\/blog\//, '').replace(/\/$/, '');
 
 const breadcrumbItems = [
 	{ label: 'ホーム', href: '/' },
