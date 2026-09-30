@@ -33,10 +33,18 @@ jobs:
         run: |
           if ! npm run build > build.log 2>&1; then
             cat build.log
-            ERR=$(tail -n 25 build.log | tr '\n' ' ')
-            echo "::error title=AstroBuildFailure::$ERR"
+            echo "### Astro Build Error" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            tail -n 40 build.log >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
             exit 1
           fi
+      - name: Upload build log on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-log
+          path: build.log
       - name: Upload site artifact
         uses: actions/upload-pages-artifact@v3
         with:
