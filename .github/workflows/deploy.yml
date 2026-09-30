@@ -30,7 +30,13 @@ jobs:
       - name: Install dependencies
         run: npm ci || npm install
       - name: Build site
-        run: npm run build
+        run: |
+          if ! npm run build > build.log 2>&1; then
+            cat build.log
+            ERR=$(tail -n 25 build.log | tr '\n' ' ')
+            echo "::error title=AstroBuildFailure::$ERR"
+            exit 1
+          fi
       - name: Upload site artifact
         uses: actions/upload-pages-artifact@v3
         with:
